@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s profile{% endblock %}
+{% block content %}
+	<div class="container">
+    <h2></h2>
+      <form class="form-horizontal" action="/register/" method="post">
+        <fieldset>
+          <legend>Your Personal Information</legend>
+          <div class="control-group">
+            <label class="control-label" for="username">User name</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="username" name="username">
+              <p class="help-block">You will use this user name to login.</p>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+              <input type="password" class="input-xlarge" id="password" name="password">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="email">Email</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="email" name="email">
+            </div>
+          </div>
+          <hr />
+          <div class="control-group">
+            <label class="control-label" for="name">Real name</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="name" name="name">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="age">Age</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="age" name="age">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="gender">Gender</label>
+            <div class="controls">
+              <label class="radio">
+                <input type="radio" name="gender" value="M" checked>
+                Male
+              </label>
+              <label class="radio">
+                <input type="radio" name="gender" value="F">
+                Female
+              </label>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="addr">Address</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="addr" name="addr">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a href="/" class="btn" >Close</a>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>  
+	
+{% endblock %}

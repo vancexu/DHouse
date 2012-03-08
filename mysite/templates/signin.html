@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sign in</title>
+</head>
+
+<body>
+    {% if error %}
+        <div id="signin_error">{{ error }}</div>
+    {% endif %}
+
+    <form action="/signin/" method="post" name="signinform">
+    <label for="username">User name:</label>
+    <input type="text" name="username" value="" id="username" />
+    <label for="password">Password:</label>
+    <input type="password" name="password" value="" id="password" />
+
+    <input type="submit" value="signin" />
+    {% if next %}
+    <input type='hidden' name='next' value='{{next}}' />
+    {% endif %}
+  </form>
+
+</body>

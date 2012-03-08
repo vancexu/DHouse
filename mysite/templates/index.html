@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}My Desert House{% endblock %}
+{% block content %}
+  
+  <!--Nav bar begin -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">My Dersert House</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+            
+            {% if not user.username %}
+            <div id="LoginModal" class="modal hide fade">
+              <div class="modal-header">
+                <a class="close" data-dismiss="modal" >&times;</a>
+                <h3>Login</h3>
+              </div>
+              <div class="modal-body">
+                <h4>Dear customer, long time no see</h4>
+                <form action="/signin/" method="post" name="signinform">
+                  <label for="username">User name:</label>
+                  <input type="text" name="username" value="" id="username" />
+                  <label for="password">Password:</label>
+                  <input type="password" name="password" value="" id="password" />
+                  {% if error %}
+                    <div id="signin_error">{{ error }}</div>
+                  {% endif %}
+                  <!-- <input type="submit" value="signin" /> -->
+                  {% if next %}
+                  <input type='hidden' name='next' value='{{next}}' />
+                  {% endif %}
+                  <script type="text/javascript">
+                    function loginFormSubmit() {
+                      document.forms["signinform"].submit();
+                    }
+                  </script>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <a class="btn btn-primary" onclick="loginFormSubmit()">OK</a>
+                <a href="#" class="btn" data-dismiss="modal" >Close</a>
+              </div>
+            </div>
+            <p class="navbar-text pull-right"><a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a></p>
+            {% endif %}
+            {% if user.username %}
+            <p class="navbar-text pull-right">Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a></p>
+            {% endif %}
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+  <!-- Nav bar end-->
+  <!-- body begin -->
+    <div class="container">
+      <!-- <div class="hero-unit"> -->
+        <h1>Welcome to My Desert House!</h1>
+        <div id="myCarousel" class="carousel slide">
+            <div class="carousel-inner">
+              <div class="item active">
+                <img src="static/img/index-slide/01.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>First Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+              <div class="item">
+                <img src="static/img/index-slide/02.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>Second Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+              <div class="item">
+                <img src="static/img/index-slide/03.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>Third Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+            </div>
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+            <script type="text/javascript">
+              $(document).ready(fucntion() {
+                $('.myCarousel').carousel({
+                  interval: 2000
+                });
+              });
+            </script>
+      </div>
+
+      {% for product_row in products %}
+        <div class="row-fluid">
+          <ul class="thumbnails">
+            {% for product in product_row %}
+              {% if product %}
+                <li class="span4">
+                  <div class="thumbnail">
+                    <img src="{{ product.photo }}" alt="">
+                    <div class="caption">
+                      <h4>Name: {{ product.name }}</h4>
+                      <h5>Price: {{ product.price }}</h5>
+                      <p>{{ product.description }}</p>
+                      <!-- buyform begin -->
+                      {% if user.username %}
+                        <div id="buyModal{{ product.id }}" class="modal hide fade">
+                          <div class="modal-header">
+                            <a class="close" data-dismiss="modal" >&times;</a>
+                            <h3>{{ product.name }}</h3>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row-fluid">
+                              <div class="span6">
+                                <p>Your account have <strong id="money_left{{ profile.id }}">{{ profile.money }}</strong> dollars </p>
+                                <p>There are <strong id="product_remain{{ product.id }}">{{ product.remains }}</strong> remain cakes </p>
+                                <hr />
+                                <form action="/buy/{{ product.id }}" method="post" name="buyform{{ product.id }}">
+                                  <label for="number">How many do you want:</label>
+                                  <input type="text" name="number"  value="1" id="number{{ product.id }}" />
+                                  <input type='hidden' name='price_unit' id="price_unit{{ product.id }}" value='{{ product.price }}' />
+                                  <input type='hidden' name='level' id="level{{ user.id }}" value='{{ profile.level }}' />
+                                  {% if next %}
+                                  <input type='hidden' name='next' value='{{next}}' />
+                                  {% endif %}
+                                  <script type="text/javascript">
+                                    $(document).ready(function() {
+                                      var money_left = parseFloat($("#money_left{{ profile.id }}").html());
+                                      var product_remain = parseInt($("#product_remain{{ product.id }}").html());
+                                      var price = parseFloat($("#price_unit{{ product.id }}").val());
+                                      var level = parseInt($("#level{{ user.id }}").val());
+                                      var discount = (10 - level) / 10.0;
+                                      var price_unit = price * discount;
+                                      $("#okbtn{{ product.id }}").click(function() {
+                                        var number = parseInt($("#number{{ product.id }}").val());
+                                        var pay_all = number * price_unit;
+                                        if (number > product_remain) {
+                                          $("#errors{{ product.id }}").css({"color":"red", "font-style":"italic", "font-weight":"bold"});
+                                          $("#errors{{ product.id }}").html("Sorry, the {{ product.name }} only have {{ product.remains }} left.");
+                                        }
+                                        else if (money_left < pay_all) {
+                                          $("#errors{{ product.id }}").css({"color":"red", "font-style":"italic", "font-weight":"bold"});
+                                          $("#errors{{ product.id }}").html("Sorry, the unit price for you is " + price_unit + ",and you should pay " + pay_all + "in all.");
+                                        }else {
+                                          document.forms["buyform{{ product.id }}"].submit();
+                                        }
+                                      });
+                                    });
+                                    // function buyFormSubmit() {
+                                    //   document.forms["buyform{{ product.id }}"].submit();
+                                    // }
+                                  </script>
+                                  <p id="errors{{ product.id }}"></P>
+                                </form>
+                              </div> <!--/span6-->
+                              <div class="span6">
+                                <img src="{{ product.photo }}" />
+                              </div>
+                            </div><!--row-fluid-->
+                          </div>
+                          <div class="modal-footer">
+                            <a class="btn btn-primary" id="okbtn{{ product.id }}">OK</a>
+                            <a href="#" class="btn" data-dismiss="modal" >Close</a>
+                          </div>
+                        </div> <!-- modal end-->
+                      {% endif %}
+                      <!-- buyform end -->
+                      <!-- buy signin begin -->
+                      {% if not user.username %}
+                      <div id="buyModal{{ product.id }}" class="modal hide fade">
+                        <div class="modal-header">
+                          <a class="close" data-dismiss="modal" >&times;</a>
+                          <h3>Login First Please</h3>
+                        </div>
+                        <div class="modal-body">
+                          <h4>Before you but the sweet, please login first</h4>
+                          <form action="/signin/" method="post" name="buySigninform{{ product.id }}">
+                            <label for="username">User name:</label>
+                            <input type="text" name="username" value="" id="username" />
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" value="" id="password" />
+                            {% if error %}
+                              <div id="signin_error">{{ error }}</div>
+                            {% endif %}
+                            <!-- <input type="submit" value="signin" /> -->
+                            {% if next %}
+                            <input type='hidden' name='next' value='{{next}}' />
+                            {% endif %}
+                            <script type="text/javascript">
+                              function buyLoginFormSubmit() {
+                                document.forms["buySigninform{{ product.id }}"].submit();
+                              }
+                            </script>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <a class="btn btn-primary" onclick="buyLoginFormSubmit()">OK</a>
+                          <a href="#" class="btn" data-dismiss="modal" >Close</a>
+                        </div>
+                      </div>
+                      {% endif %}
+                      <!-- buy signin end -->
+                      <p><a data-toggle="modal" href="#buyModal{{ product.id }}" class="btn btn-primary">Buy now</a> <a href="#" class="btn">Order</a></p>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>           
+      {% endfor %}
+
+
+          <div class="row-fluid">
+            <div class="span6">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+              <p><a class="btn" href="#">View details &raquo;</a></p>
+            </div><!--/span-->
+            <div class="span6">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+              <p><a class="btn" href="#">View details &raquo;</a></p>
+            </div><!--/span-->
+          </div><!--/row-->
+
+    <!-- </div><!--/herounit>   -->
+
+
+    </div><!--/container-->
+
+{% endblock %}
