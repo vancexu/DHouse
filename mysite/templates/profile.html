@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ user.username }}'s profile{% endblock %}
 {% block content %}
-	<div class="container">
+  <div class="container">
     <h2></h2>
-      <form class="form-horizontal" action="/register/" method="post">
+      <form class="form-horizontal" action="/change/{{ profile.id }}" method="post" name="changeform">
         <div class="row-fluid">
           <div class="span6">
             <fieldset>
@@ -54,14 +54,29 @@
               </div>
               <hr />
               <div class="control-group">
-                <label class="control-label" for="money"><strong style="color:blue;">Money</strong></label>
+                <label class="control-label" for="moneyadd"><strong style="color:blue;">Add Money</strong></label>
                 <div class="controls">
-                  <input type="text" class="input-xlarge" id="money" name="money" placeholder="{{ profile.money }}">
+                  <input type="text" class="input-xlarge" id="moneyadd" name="moneyadd" placeholder="more than 100 will active your account">
+                  <span class="help-inline" style="color:red" id="moneyadderror"></span>
+                  <p class="help-block">Your account have <strong style="color:#FF66FF">{{ profile.money }}</strong> dollars now.</p>
+                  <p class="help-block">Your account will expire after <strong style="color:#FF66FF">{{ profile.expire_date }}</strong>.</p>
                 </div>
               </div>
+              <script type="text/javascript">
+                $(document).ready(function() {
+                  $("#changebtn").click(function() {
+                    var moneyadd = $("#moneyadd").val();
+                    if (isNaN(moneyadd)) {
+                      $("#moneyadderror").html("Not number");
+                    }else {
+                      document.forms["changeform"].submit();
+                    }
+                  });
+                });
+              </script>
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Change</button>
-                <a href="/" class="btn" >Close</a>
+                <a class="btn btn-primary" id="changebtn">Change</a>
+                <a href="/" class="btn" >Back</a>
               </div>
             </fieldset>
           </div>
@@ -86,5 +101,5 @@
       </form>
     </div>
   </div>  
-	
+  
 {% endblock %}

@@ -23,4 +23,5 @@ urlpatterns = patterns('dhouse.views',
     url(r'^profile/(?P<user_id>\d+)/?$', 'profile'),
     url(r'^buy/?$', 'buy'),
     url(r'^buy/(?P<product_id>\d+)/?$', 'buy'),
+    url(r'^change/(?P<profile_id>\d+)/?$', 'changeProfile'),
 )

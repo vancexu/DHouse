@@ -150,15 +150,12 @@
                                         }
                                         else if (money_left < pay_all) {
                                           $("#errors{{ product.id }}").css({"color":"red", "font-style":"italic", "font-weight":"bold"});
-                                          $("#errors{{ product.id }}").html("Sorry, the unit price for you is " + price_unit + ",and you should pay " + pay_all + "in all.");
+                                          $("#errors{{ product.id }}").html("Sorry, the unit price for you is " + price_unit + ",and you should pay " + pay_all + " in all.");
                                         }else {
                                           document.forms["buyform{{ product.id }}"].submit();
                                         }
                                       });
                                     });
-                                    // function buyFormSubmit() {
-                                    //   document.forms["buyform{{ product.id }}"].submit();
-                                    // }
                                   </script>
                                   <p id="errors{{ product.id }}"></P>
                                 </form>

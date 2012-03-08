@@ -4,6 +4,7 @@ from django.http import HttpResponse, QueryDict
 from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.contrib.auth.decorators import login_required
 from dhouse.models import UserProfile, Product, SalesRecord
+from datetime import datetime
 
 def index(request):
     '''
@@ -19,6 +20,9 @@ def index(request):
 
     if user.is_authenticated():
         profile = user.get_profile()
+        if datetime.now() > profile.expire_date:
+            profile.state = False
+            profile.save()
     else:
         profile = None
 
@@ -40,12 +44,15 @@ def register(request):
         password = query_dict['password']
         user = User.objects.create_user(username, email, password)
         user = authenticate(username=username, password=password)
-        userProfile = user.get_profile()
-        userProfile.name = query_dict['name']
-        userProfile.age = query_dict['age']
-        userProfile.gender = query_dict['gender']
-        userProfile.addr = query_dict['addr']
-        userProfile.save()
+        profile = user.get_profile()
+        profile.name = query_dict['name']
+        profile.age = query_dict['age']
+        profile.gender = query_dict['gender']
+        profile.addr = query_dict['addr']
+        profile.money = query_dict['money']
+        if profile.money >= 100:
+            profile.state = True
+        profile.save()
         if user is not None and user.is_active:
             login(request, user)
             # return render_to_response("index.html", {"login": True, "username": user.username})
@@ -98,14 +105,14 @@ def profile(request, user_id=0):
         return redirect(rd) 
     else:
         try:
-            user_profile = request.user.get_profile()
+            profile = request.user.get_profile()
         except SiteProfileNotAvailable:
             return render_to_response('signin.html', {'error': 'Profile unavaliable, login please.'})
 
-    products_bought = Product.objects.filter(userprofile__id=user_profile.id)
+    products_bought = Product.objects.filter(userprofile__id=profile.id)
     context = {
         'user'    :   request.user,
-        'profile' :   user_profile,
+        'profile' :   profile,
         'products_bought' :   products_bought,
     }
     return render_to_response('profile.html', context)
@@ -124,8 +131,8 @@ def buy(request, product_id):
         number_str = query_dict['number']
         number_int = int(number_str)
         if number_int <= product.remains:
-            if profile.level > 10: 
-                profile.level = 10
+            if profile.level > 5: 
+                profile.level = 5
                 profile.save()
             discount = (10 - profile.level) / 10.0
             price_unit = round(product.price * discount, 1)
@@ -136,6 +143,16 @@ def buy(request, product_id):
                 product.remains -= number_int
                 profile.save()
                 product.save()
+                # deal with level
+                srs = SalesRecord.objects.filter(user=profile)
+                if srs:
+                    money_sum = 0
+                    level = profile.level
+                    for sr in srs:
+                        money_sum += sr.product.price*sr.num
+                    if (money_sum > (level+1)*2000) and (level <= 5):
+                        profile.level += 1
+                        profile.save()
             else:
                 error = 'Sorry, you do not have enough money'
         else:
@@ -145,4 +162,45 @@ def buy(request, product_id):
         }
         return redirect('/')
     elif request.method == 'GET':
+        return redirect('/')
+
+@login_required
+def changeProfile(request, profile_id):
+    '''
+    url:change
+    '''
+    if request.method == 'POST':
+        user = request.user
+        query_dict = request.POST
+        profile = user.get_profile()
+        if query_dict['username']:
+            user.username = query_dict['username']
+        if query_dict['email']:
+            user.email = query_dict['email']
+        if query_dict['name']:
+            profile.name = query_dict['name']
+        if query_dict['age']:
+            profile.age = query_dict['age']
+        if query_dict['gender']:
+            profile.gender = query_dict['gender']
+        if query_dict['addr']:
+            profile.addr = query_dict['addr']
+        if query_dict['moneyadd']:
+            moneyadd = float(query_dict['moneyadd'])
+        else:
+            moneyadd = 0.0
+        money_before = profile.money
+        if moneyadd > 0:
+            if moneyadd >= 100.0:
+                profile.state = True
+                now = datetime.now()
+                profile.expire_date = now.replace(year=now.year+1)
+            profile.money = money_before + moneyadd
+
+        profile.save()
+        user.save()
+   
+        rd = '/change/%d' % profile.id
+        return redirect(rd)
+    else:
         return redirect('/')
