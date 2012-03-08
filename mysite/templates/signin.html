@@ -1,25 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
 <!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Sign in</title>
-</head>
 
-<body>
-    {% if error %}
-        <div id="signin_error">{{ error }}</div>
-    {% endif %}
+<div class="container">
+  {% if error %}
+    <div id="signin_error" style="color:red; font-size:150%">{{ error }}</div>
+  {% endif %}
 
-    <form action="/signin/" method="post" name="signinform">
+  <form class="form-horizontal" action="/signin/" method="post" name="signinform">
+    <h2>Sign in please</h2>
     <label for="username">User name:</label>
     <input type="text" name="username" value="" id="username" />
     <label for="password">Password:</label>
     <input type="password" name="password" value="" id="password" />
-
-    <input type="submit" value="signin" />
+    <br />
+    <br />
+    <input type="submit" value="Signin" />
     {% if next %}
     <input type='hidden' name='next' value='{{next}}' />
     {% endif %}
   </form>
 
-</body>
+</div>
+{% endblock %}

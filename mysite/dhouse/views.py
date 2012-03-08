@@ -102,9 +102,11 @@ def profile(request, user_id=0):
         except SiteProfileNotAvailable:
             return render_to_response('signin.html', {'error': 'Profile unavaliable, login please.'})
 
+    products_bought = Product.objects.filter(userprofile__id=user_profile.id)
     context = {
         'user'    :   request.user,
         'profile' :   user_profile,
+        'products_bought' :   products_bought,
     }
     return render_to_response('profile.html', context)
 
