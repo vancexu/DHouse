@@ -11,3 +11,4 @@ from django.contrib import admin
 admin.site.register(UserProfile)
 admin.site.register(Product)
 admin.site.register(SalesRecord)
+admin.site.register(OrdersRecord)

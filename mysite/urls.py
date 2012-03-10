@@ -25,4 +25,8 @@ urlpatterns = patterns('dhouse.views',
     url(r'^buy/(?P<product_id>\d+)/?$', 'buy'),
     url(r'^change/(?P<profile_id>\d+)/?$', 'changeProfile'),
     url(r'^products/?$', 'productsManage'),
+    url(r'^order/?$', 'order'),
+    url(r'^order/(?P<product_id>\d+)/?$', 'order'),
+    url(r'^confirmorder/(?P<order_id>\d+)/?$', 'confirmOrder'),
+    url(r'^cancelorder/(?P<order_id>\d+)/?$', 'cancelOrder'),
 )

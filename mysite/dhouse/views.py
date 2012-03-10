@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, QueryDict
 from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.contrib.auth.decorators import login_required
-from dhouse.models import UserProfile, Product, SalesRecord
-from datetime import datetime
+from dhouse.models import UserProfile, Product, SalesRecord, OrdersRecord
+from datetime import datetime, timedelta
+
+MAX_ORDER_DAYS = 7
 
 def index(request):
     '''
@@ -50,7 +52,7 @@ def register(request):
         profile.gender = query_dict['gender']
         profile.addr = query_dict['addr']
         profile.money = query_dict['money']
-        if profile.money >= 100:
+        if float(profile.money) >= 100:
             profile.state = True
         profile.save()
         if user is not None and user.is_active:
@@ -110,19 +112,26 @@ def profile(request, user_id=0):
             return render_to_response('signin.html', {'error': 'Profile unavaliable, login please.'})
 
     products_bought = Product.objects.filter(userprofile__id=profile.id)
+    ors = OrdersRecord.objects.filter(user=profile)
+    orders = ors.filter(state=False)
     context = {
         'user'    :   request.user,
         'profile' :   profile,
         'products_bought' :   products_bought,
+        'orders' :   orders,
     }
     return render_to_response('profile.html', context)
 
 @login_required
-def buy(request, product_id):
+def buy(request, product_id=0):
     '''
     url: /buy
+    url: /buy/product_id
     '''
     error = ''
+    if product_id == 0:
+        error = 'No product have been chosen'
+        return render_to_response('error.html', {'error': error})
     if request.method == 'POST':
         product = get_object_or_404(Product, pk=product_id)
         user = request.user
@@ -135,10 +144,10 @@ def buy(request, product_id):
                 profile.level = 5
                 profile.save()
             discount = (10 - profile.level) / 10.0
-            price_unit = round(product.price * discount, 1)
+            price_unit = round(product.price * discount * product.discount, 1)
             pay_all = round(number_int * price_unit, 1)
             if profile.money >= pay_all:
-                SalesRecord.objects.create(user=profile, product=product, num=number_str)
+                SalesRecord.objects.create(user=profile, product=product, num=number_str, money=pay_all)
                 profile.money -= pay_all
                 product.remains -= number_int
                 profile.save()
@@ -154,15 +163,118 @@ def buy(request, product_id):
                         profile.level += 1
                         profile.save()
             else:
-                error = 'Sorry, you do not have enough money'
+                error = 'You do not have enough money'
         else:
-            error = 'Sorry, remains insufficent! Please try other products'
+            error = 'Remains insufficent! Please try other products'
         context = {
 
         }
         return redirect('/')
     elif request.method == 'GET':
-        return redirect('/')
+        error = 'You have not provide info about product'
+        return render_to_response('error.html', {'error': error})
+
+@login_required
+def order(request, product_id=0):
+    '''
+    url: /order
+    url: /order/product_id
+    '''
+    error = ''
+    if product_id == 0:
+        error = 'No product have been chosen'
+        return render_to_response('error.html', {'error': error})
+
+    if request.method == 'GET':
+        product = get_object_or_404(Product, pk=product_id)
+        user = request.user
+        profile = user.get_profile()
+        context = {
+            'user': user,
+            'product': product,
+        }
+        return render_to_response('order.html', context)
+    elif request.method == 'POST':
+        product = get_object_or_404(Product, pk=product_id)
+        user = request.user
+        profile = user.get_profile()
+        query_dict = request.POST
+        days_str = query_dict['days']
+        days_int = int(days_str)
+        now = datetime.now()
+        time_buy = now + timedelta(days=days_int)
+        number_str = query_dict['number']
+        number_int = int(number_str) 
+        if number_int <= product.remains:
+            if days_int <= MAX_ORDER_DAYS:
+                if profile.level > 5: 
+                    profile.level = 5
+                    profile.save()
+                discount = (10 - profile.level) / 10.0
+                price_unit = round(product.price * discount * product.discount, 1)
+                pay_all = round(number_int * price_unit / 2, 1)
+                if profile.money >= pay_all:
+                    OrdersRecord.objects.create(user=profile, product=product, num=number_str, time=now, time_buy=time_buy, money=pay_all)
+                    profile.money -= pay_all
+                    product.remains -= number_int
+                    profile.save()
+                    product.save()
+                else:
+                    error = 'Not enough money to order'
+            else:
+                error = 'Remains insufficent! Please try other products'
+        return redirect('/profile')
+
+@login_required
+def confirmOrder(request, order_id=0):
+    '''
+    url: /confirmorder/order_id
+    '''
+    error = ''
+    if order_id == 0:
+        error = 'No order_id found'
+        return redirect('error.html', {'error': error})
+    order = get_object_or_404(OrdersRecord, pk=order_id)
+    now = datetime.now()
+    if order.time_buy >= now:   # the order does not expire
+        order.state = True
+        order.save()
+        profile = order.user
+        profile.money -= order.money
+        profile.save()
+        product = order.product
+        number = order.num
+        money = order.money * 2
+        SalesRecord.objects.create(user=profile, product=product, num=number, money=money)
+    else:
+        product = order.product
+        product.remains += order.num
+        order.state = True
+        order.save()
+    rd = '/profile/%d' % request.user.id
+    return redirect(rd)
+
+@login_required
+def cancelOrder(request, order_id=0):
+    '''
+    url: /cancelorder/order_id
+    '''
+    error = ''
+    if order_id == 0:
+        error = 'No order_id found'
+        return redirect('error.html', {'error': error})
+    order = get_object_or_404(OrdersRecord, pk=order_id)
+    now = datetime.now()
+    if order.time_buy >= now:   # the order does not expire
+        profile = order.user
+        profile.money += order.money
+        product = order.product
+        product.remains += order.num
+        profile.save()
+        product.save()
+        order.delete()
+    rd = '/profile/%d' % request.user.id
+    return redirect(rd)
 
 @login_required
 def changeProfile(request, profile_id):

@@ -83,6 +83,57 @@
           <!-- Info end -->
           <!-- product begin -->
           <div class="span6">
+            <!-- order section begin -->
+            <h2>Things you order</h2>
+            {% if orders %}
+              {% for order in orders %}
+                <div class="well">
+                  <div class="row-fluid" style="height:140px">
+                    <div class="span3">
+                      <img style="height:130px; width:130px" src="{{ order.product.photo }}">
+                    </div>
+                    <div class="span9">
+                      <table class="table table-bordered table-striped">
+                        <tbody>
+                          <tr>
+                            <tr>
+                              <th>Order Time</th>
+                              <th>Expire Time</th>
+                              <td rowspan="2" style="vertical-align:middle; text-align:center;">
+                                <a class="btn btn-primary" href="/confirmorder/{{ order.id }}"> Confirm</a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>{{ order.time|date }}</td>
+                              <td>{{ order.time_buy }}</td>
+                            </tr>
+                          </tr>
+                          <tr>
+                            <tr>
+                              <th>Number</th>
+                              <th>All Need to Pay</th>
+                              <td rowspan="2" style="vertical-align:middle; text-align:center;">
+                                <a class="btn" href="/cancelorder/{{ order.id }}"> Cancel</a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>{{ order.num }}</td>
+                              <td>{{ order.money }}</td>
+                            </tr>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% if not orders %}
+              <p> You have not order anything. </p>
+            {% endif %}
+            <hr />
+            <!-- order section end -->
+            <!-- bought section begin -->
             <h2>Things you ever bought</h2>
             {% if products_bought %}
               <ul class="thumbnails">
@@ -95,7 +146,11 @@
                 {% endfor %}
               </ul>
             {% endif %}
+            {% if not products_bought %}
+              <p> You have not bought anything. </p>
+            {% endif %}
           </div>
+          <!-- bought section end -->
         </div>
         <!-- product end -->
       </form>

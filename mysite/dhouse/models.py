@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField()
-    discount = models.FloatField(default=0)
+    discount = models.FloatField(default=1) # discount: 0 - 1, default=1 don't discount
     photo = models.CharField(max_length=200)
     description = models.CharField(max_length=600)
     remains = models.IntegerField()
@@ -36,7 +36,7 @@ class UserProfile(models.Model):
     now = datetime.now()
     expire_date = models.DateTimeField('date expired', default=now.replace(year=now.year+1))
     products = models.ManyToManyField(Product, through='SalesRecord', null=True)
-    products_order = models.ManyToManyField(Product, through='OrdersRecord', null=True)
+    products_order = models.ManyToManyField(Product, through='OrdersRecord', related_name='users_order', null=True)
     
     def __unicode__(self):
         return self.name
@@ -44,22 +44,23 @@ class UserProfile(models.Model):
     class Meta:
         ordering = ('name',)
 
+@receiver(post_save, sender=User)
+def create_userProfile(sender, instance, created, **kwargs):
+    print "Save a User"
+    if created:
+        up = UserProfile.objects.create(user=instance)
 
 class SalesRecord(models.Model):
     user = models.ForeignKey(UserProfile)
     product = models.ForeignKey(Product)
     num = models.IntegerField('number of product')
     time = models.DateTimeField('record time', default=datetime.now())
-    
+    # price_unit = round((10-user.level)/10.0 * product.price * product.discount, 1)
+    # pay_all = round(price_unit*num, 1)
+    money = models.FloatField(default=0)
+
     def __unicode__(self):
         return self.product.name
-
-@receiver(post_save, sender=User)
-def create_userProfile(sender, instance, created, **kwargs):
-    print "Save a User"
-    if created:
-        up = UserProfile.objects.create(user=instance)
-        # print "Save a UserProfile"
 
 class OrdersRecord(models.Model):
     user = models.ForeignKey(UserProfile)
@@ -68,6 +69,10 @@ class OrdersRecord(models.Model):
     now = datetime.now()
     time = models.DateTimeField('record time', default=now)
     time_buy = models.DateTimeField('Buy time', default=now+timedelta(days=3))
-    
+    state = models.BooleanField(default=False)
+    # price_unit = round((10-user.level)/10.0 * product.price * product.discount, 1)
+    # pay_all = round(price_unit*num/2.0, 1)
+    money = models.FloatField(default=0)
+
     def __unicode__(self):
         return self.product.name

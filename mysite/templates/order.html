@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Order{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="span6 offset3">
+        <div class="page-header">
+          <h1>Order</h1>
+        </div>
+        <form class="form-horizontal" action="/order/{{ product.id }}" method="post" id="orderform" >
+          <fieldset>
+            <div class="alert alert-block">
+              <a class="close" data-dismiss="alert">×</a>
+              <h4 class="alert-heading">Notice!</h4>
+              We only provide an order within 7 days.
+            </div>
+            <div class="well">
+              <div class="row-fluid">
+                <div class="span4">
+                  <img style="height:170px; width:170px" src="{{ product.photo }}">
+                </div>
+                <div class="span8">
+                  <table class="table table-bordered table-striped">
+                    <tbody>
+                      <tr>
+                        <th>Product Name</th>
+                        <td>{{ product.name }}</td>
+                      </tr>
+                      <tr>
+                        <th>Price</th>
+                        <td>{{ product.price }}</td>
+                      </tr>
+                      <tr>
+                        <th>Description</th>
+                        <td>{{ product.description }}</td>
+                      </tr>
+                      <tr>
+                        <th>Remains</th>
+                        <td>{{ product.remains }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="number">Number</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" id="number" name="number" value="1">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="days">Order Days</label>
+              <div class="controls">
+                <input type="text" class="input-xlarge" id="days" name="days" value="1">
+                <span class="help-inline" style="color:red" id="dayserror"></span>
+                <p class="help-block" style="font-style:italic">Input 1-7, 1 means tomorrow and 2 means the day after tomorrow.</p>
+              </div>
+            </div>
+            <script type="text/javascript">
+              function isNum(s) {
+                if(s != null) {
+                  var r,re;
+                  re = /\d*/i;
+                  r = s.match(re);
+                  return (r == s) ? true : false;
+                }
+                return false;
+              }
+              $(document).ready(function() {
+                $("#orderbtn").click(function() {
+                  var days = $("#days").val();
+                  if(isNaN(days)) {
+                    $("#dayserror").html("Not number");
+                  }else if(isNum(days)){
+                    var days_int = parseInt(days);
+                    if(days_int > 7) {
+                      $("#dayserror").html("Input number 1-7");
+                    } else {
+                      document.forms["orderform"].submit();
+                    }
+                  }
+                });
+              });
+            </script>
+            <div class="form-actions">
+              <a class="btn btn-primary" id="orderbtn">Order</a>
+              <a href="/" class="btn" >Back</a>
+            </div>
+          </fieldset>
+        </form>
+      </div> <!-- span6 -->
+    </div> <!-- row-fluid -->
+  </div> <!-- containter --> 
+
+{% endblock %}

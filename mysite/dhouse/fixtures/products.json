@@ -1,0 +1,50 @@
+[
+	{
+		"model": "dhouse.product",
+		"pk": 1,
+		"fields": {
+			"name": "Happy Sunshine",
+			"price": 156,
+			"discount": 1,
+			"photo": "/static/img/cake/01.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 2,
+		"fields": {
+			"name": "Bright Princess",
+			"price": 128,
+			"discount": 1,
+			"photo": "/static/img/cake/02.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 3,
+		"fields": {
+			"name": "Green Model",
+			"price": 112,
+			"discount": 1,
+			"photo": "/static/img/cake/03.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 4,
+		"fields": {
+			"name": "Black and White",
+			"price": 134,
+			"discount": 1,
+			"photo": "/static/img/cake/04.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	}
+]
