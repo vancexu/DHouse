@@ -83,9 +83,9 @@ def signin(request):
                     return redirect('/')
             #Redirect to another signin page and show error. (Can be done in a better way through js)
             else:
-                return render_to_response('signin.html', {'next': request.POST.get('next', '/'), 'error': 'user is not active',})
+                return render_to_response('signin.html', {'next': request.POST.get('next', '/'), 'error': 'User is not active',})
         else:
-            return render_to_response('signin.html', {'next': request.POST.get('next', '/'), 'error': 'incorrect login information',})
+            return render_to_response('signin.html', {'next': request.POST.get('next', '/'), 'error': 'Incorrect login information',})
 
 
 def signout(request):
@@ -204,3 +204,14 @@ def changeProfile(request, profile_id):
         return redirect(rd)
     else:
         return redirect('/')
+
+def productsManage(request):
+    '''
+    url: /products
+    '''
+    products = Product.objects.all()
+    context = {
+        'user' : request.user,
+        'products' : products,
+    }
+    return render_to_response('products.html', context);

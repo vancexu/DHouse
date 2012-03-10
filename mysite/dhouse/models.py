@@ -36,6 +36,7 @@ class UserProfile(models.Model):
     now = datetime.now()
     expire_date = models.DateTimeField('date expired', default=now.replace(year=now.year+1))
     products = models.ManyToManyField(Product, through='SalesRecord', null=True)
+    products_order = models.ManyToManyField(Product, through='OrdersRecord', null=True)
     
     def __unicode__(self):
         return self.name
@@ -60,3 +61,13 @@ def create_userProfile(sender, instance, created, **kwargs):
         up = UserProfile.objects.create(user=instance)
         # print "Save a UserProfile"
 
+class OrdersRecord(models.Model):
+    user = models.ForeignKey(UserProfile)
+    product = models.ForeignKey(Product)
+    num = models.IntegerField('number of product')
+    now = datetime.now()
+    time = models.DateTimeField('record time', default=now)
+    time_buy = models.DateTimeField('Buy time', default=now+timedelta(days=3))
+    
+    def __unicode__(self):
+        return self.product.name

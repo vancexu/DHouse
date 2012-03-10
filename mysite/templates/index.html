@@ -15,7 +15,21 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <!-- <li><a href="/products">Products</a></li> -->
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Products 
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/products">All Avaliable Products</a>
+                  </li>
+                  <li>
+                    <a href="/products">All Products</a>
+                  </li>
+                </ul>
+              </li>
               <li><a href="#contact">Contact</a></li>
             </ul>
             
@@ -54,7 +68,7 @@
             <p class="navbar-text pull-right"><a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a></p>
             {% endif %}
             {% if user.username %}
-            <p class="navbar-text pull-right">Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a></p>
+            <p class="navbar-text pull-right"><i class="icon-user icon-white"></i> Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a></p>
             {% endif %}
           </div><!--/.nav-collapse -->
         </div>
@@ -181,27 +195,42 @@
                         </div>
                         <div class="modal-body">
                           <h4>Before you but the sweet, please login first</h4>
-                          <form action="/signin/" method="post" name="buySigninform{{ product.id }}">
+                          <form action="/signin/" method="post" name="buySigninform{{ product.id }}" id="buySigninform{{ product.id }}">
                             <label for="username">User name:</label>
-                            <input type="text" name="username" value="" id="username" />
+                            <input type="text" name="username" value="" id="username{{ product.id }}" />
                             <label for="password">Password:</label>
-                            <input type="password" name="password" value="" id="password" />
+                            <input type="password" name="password" value="" id="password{{ product.id }}" />
                             {% if error %}
                               <div id="signin_error">{{ error }}</div>
                             {% endif %}
-                            <!-- <input type="submit" value="signin" /> -->
                             {% if next %}
                             <input type='hidden' name='next' value='{{next}}' />
                             {% endif %}
                             <script type="text/javascript">
-                              function buyLoginFormSubmit() {
-                                document.forms["buySigninform{{ product.id }}"].submit();
-                              }
+                              $(document).ready(function() {
+                                $("#loginokbtn{{ product.id }}").click(function(){
+                                  var username = document.getElementById("username{{ product.id }}").value;
+                                  var password = document.getElementById('password{{ product.id }}').value;
+                                  alert(username);
+                                  alert(password);
+                                  alert("{{ product.id }}");
+                                  document.forms["buySigninform{{ product.id }}"].submit();
+                                });
+                              });
+                              // ?? only id=1 works ??
+                              // function buyLoginFormSubmit() {
+                                // var username = document.getElementById("username{{ product.id }}").value;
+                                // var password = document.getElementById('password{{ product.id }}').value;
+                                // alert(username);
+                                // alert(password);
+                                // alert("{{ product.id }}");
+                              //   document.forms["buySigninform{{ product.id }}"].submit();
+                              // }
                             </script>
                           </form>
                         </div>
                         <div class="modal-footer">
-                          <a class="btn btn-primary" onclick="buyLoginFormSubmit()">OK</a>
+                          <a class="btn btn-primary" id="loginokbtn{{ product.id }}">OK</a>
                           <a href="#" class="btn" data-dismiss="modal" >Close</a>
                         </div>
                       </div>
