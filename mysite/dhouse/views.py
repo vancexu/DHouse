@@ -317,13 +317,36 @@ def changeProfile(request, profile_id):
     else:
         return redirect('/')
 
-def productsManage(request):
+def productsAvaliable(request):
     '''
-    url: /products
+    url: /productsavaliable
+    '''
+    products = Product.objects.filter(remains__gt=0)
+    user = request.user
+    if user.is_authenticated():
+        profile = user.get_profile()
+    else:
+        profile = None
+    context = {
+        'user' : user,
+        'products' : products,
+        'profile' : profile,
+    }
+    return render_to_response('products.html', context);
+
+def productsAll(request):
+    '''
+    url: /productsavaliable
     '''
     products = Product.objects.all()
+    user = request.user
+    if user.is_authenticated():
+        profile = user.get_profile()
+    else:
+        profile = None
     context = {
         'user' : request.user,
         'products' : products,
+        'profile' : profile,
     }
     return render_to_response('products.html', context);

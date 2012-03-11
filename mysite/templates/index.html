@@ -23,10 +23,10 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a href="/products">All Avaliable Products</a>
+                    <a href="/productsavaliable">All Avaliable Products</a>
                   </li>
                   <li>
-                    <a href="/products">All Products</a>
+                    <a href="/productsall">All Products</a>
                   </li>
                 </ul>
               </li>
@@ -65,10 +65,15 @@
                 <a href="#" class="btn" data-dismiss="modal" >Close</a>
               </div>
             </div>
-            <p class="navbar-text pull-right"><a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a></p>
+            <p class="navbar-text pull-right">
+              <a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a>
+            </p>
             {% endif %}
             {% if user.username %}
-            <p class="navbar-text pull-right"><i class="icon-user icon-white"></i> Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a></p>
+            <p class="navbar-text pull-right">
+              <i class="icon-user icon-white"></i> 
+              Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a>
+            </p>
             {% endif %}
           </div><!--/.nav-collapse -->
         </div>
@@ -121,7 +126,7 @@
               {% if product %}
                 <li class="span4">
                   <div class="thumbnail">
-                    <img src="{{ product.photo }}" alt="">
+                    <img src="{{ product.photo }}" alt="" id="{{ product.id }}">
                     <div class="caption">
                       <h4>Name: {{ product.name }}</h4>
                       <h5>Price: {{ product.price }}</h5>
@@ -136,8 +141,8 @@
                           <div class="modal-body">
                             <div class="row-fluid">
                               <div class="span6">
-                                <p>Your account have <strong id="money_left{{ profile.id }}">{{ profile.money }}</strong> dollars </p>
-                                <p>There are <strong id="product_remain{{ product.id }}">{{ product.remains }}</strong> remain cakes </p>
+                                <p>Your account have <strong id="money_left{{ profile.id }}" style="color:#FF66FF">{{ profile.money }}</strong> dollars </p>
+                                <p>There are <strong id="product_remain{{ product.id }}" style="color:#FF66FF">{{ product.remains }}</strong> remain cakes </p>
                                 <hr />
                                 <form action="/buy/{{ product.id }}" method="post" name="buyform{{ product.id }}">
                                   <label for="number">How many do you want:</label>
@@ -203,17 +208,15 @@
                             {% if error %}
                               <div id="signin_error">{{ error }}</div>
                             {% endif %}
-                            {% if next %}
-                            <input type='hidden' name='next' value='{{next}}' />
-                            {% endif %}
+                            <input type='hidden' name='next' value='/#{{ product.id }}' />
                             <script type="text/javascript">
                               $(document).ready(function() {
                                 $("#loginokbtn{{ product.id }}").click(function(){
                                   var username = document.getElementById("username{{ product.id }}").value;
                                   var password = document.getElementById('password{{ product.id }}').value;
-                                  alert(username);
-                                  alert(password);
-                                  alert("{{ product.id }}");
+                                  // alert(username);
+                                  // alert(password);
+                                  // alert("{{ product.id }}");
                                   document.forms["buySigninform{{ product.id }}"].submit();
                                 });
                               });
@@ -236,7 +239,10 @@
                       </div>
                       {% endif %}
                       <!-- buy signin end -->
-                      <p><a data-toggle="modal" href="#buyModal{{ product.id }}" class="btn btn-primary">Buy now</a> <a href="/order/{{ product.id }}" class="btn">Order</a></p>
+                      <p>
+                        <a data-toggle="modal" href="#buyModal{{ product.id }}" class="btn btn-primary">Buy now</a> 
+                        <a href="/order/{{ product.id }}" class="btn">Order</a>
+                      </p>
                     </div>
                   </div>
                 </li>

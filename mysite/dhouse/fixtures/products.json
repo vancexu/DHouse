@@ -46,5 +46,17 @@
 			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
 			"remains": 200
 		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 5,
+		"fields": {
+			"name": "Gross Black Hat",
+			"price": 140,
+			"discount": 1,
+			"photo": "/static/img/cake/05.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 0
+		}
 	}
 ]
