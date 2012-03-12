@@ -357,9 +357,79 @@ def charts(request):
     '''
     url: /charts [ugly hack]:should custume the admin page
     '''
-    profiles = UserProfile.objects.all()
+    user = request.user
+    if user.is_staff == False:
+        return redirect('/')
 
-    filename = os.path.join('static', 'data', 'data.csv')
+    folderpath = os.path.join('static', 'data')
+    profiles = UserProfile.objects.all()
+    profiles = profiles.filter(user__is_staff=False)
+    # gender
+    males_len = len(profiles.filter(gender='M'))
+    females_len = len(profiles.filter(gender='F'))
+    males_proportion = males_len*1.0/(males_len+females_len)
+    females_proportion = 1.0 - males_proportion
+    filename_gender = os.path.join(folderpath, 'gender.csv')
+    records_gender = open(filename_gender, 'w')
+    records_gender.write('Male,%f,%d\n' % (males_proportion, males_len))
+    records_gender.write('Female,%f,%d' % (females_proportion, females_len))
+    records_gender.close()
+
+    # state
+    active_len = len(profiles.filter(state=True))
+    inactive_len = len(profiles.filter(state=False))
+    active_proportion = active_len*1.0/(active_len+inactive_len)
+    inactive_proportion = 1.0 - active_proportion
+    filename_state = os.path.join(folderpath, 'state.csv')
+    records_state = open(filename_state, 'w')
+    records_state.write('Active,%f,%d\n' % (active_proportion, active_len))    
+    records_state.write('Inactive,%f,%d' % (inactive_proportion, inactive_len))
+    records_state.close()
+
+    # age
+    age_1 = len(profiles.filter(age__lte=10))
+    age_2 = len(profiles.filter(age__gt=10, age__lte=20))
+    age_3 = len(profiles.filter(age__gt=20, age__lte=30))
+    age_4 = len(profiles.filter(age__gt=30, age__lte=40))
+    age_5 = len(profiles.filter(age__gt=40, age__lte=50))
+    age_6 = len(profiles.filter(age__gt=50))
+    age_sum = age_1 +age_2 +age_3 +age_4 +age_5 +age_6 
+    age_1_proportion = age_1*1.0 / age_sum
+    age_2_proportion = age_2*1.0 / age_sum
+    age_3_proportion = age_3*1.0 / age_sum
+    age_4_proportion = age_4*1.0 / age_sum
+    age_5_proportion = age_5*1.0 / age_sum
+    age_6_proportion = 1.0 - age_1_proportion- age_2_proportion- age_3_proportion- age_4_proportion- age_5_proportion
+    filename_age = os.path.join(folderpath, 'age.csv')
+    records_age = open(filename_age, 'w')
+    records_age.write('1-10,%f,%d\n' % (age_1_proportion, age_1))
+    records_age.write('11-20,%f,%d\n' % (age_2_proportion, age_2))
+    records_age.write('21-30,%f,%d\n' % (age_3_proportion, age_3))
+    records_age.write('31-40,%f,%d\n' % (age_4_proportion, age_4))
+    records_age.write('41-50,%f,%d\n' % (age_5_proportion, age_5))
+    records_age.write('51-,%f,%d' % (age_6_proportion, age_6))
+    records_age.close()
+
+    # hotsale
+    products = Product.objects.all()
+    productform = {}
+    for product in products:
+        sales = product.salesrecord_set.all()
+        num = 0
+        for sale in sales:
+            num += sale.num
+        productform[product.name] = num
+    sortform = sorted(productform, key=productform.get)
+    sortform.reverse()
+    hotsale_name = sortform[:3]
+    filename_hotsale = os.path.join(folderpath, 'hotsale.csv')
+    records_hot = open(filename_hotsale, 'w')
+    for n in hotsale_name[:-1]:
+        records_hot.write('%s,%d\n' % (n, productform[n]))
+    records_hot.write('%s,%d' % (hotsale_name[-1], productform[hotsale_name[-1]]))
+    records_hot.close()
+
+    filename = os.path.join(folderpath, 'data.csv')
 
     records = open(filename, 'w')
     records.write('Categories,Apples,Pears,Oranges,Bananas\n')
