@@ -55,6 +55,7 @@ class SalesRecord(models.Model):
     product = models.ForeignKey(Product)
     num = models.IntegerField('number of product')
     time = models.DateTimeField('record time', default=datetime.now())
+    # [ugly hack] the pay_all should be offerd as a method, to prevent view.py compute each time
     # price_unit = round((10-user.level)/10.0 * product.price * product.discount, 1)
     # pay_all = round(price_unit*num, 1)
     money = models.FloatField(default=0)

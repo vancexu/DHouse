@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.contrib.auth.decorators import login_required
 from dhouse.models import UserProfile, Product, SalesRecord, OrdersRecord
 from datetime import datetime, timedelta
+import os
 
 MAX_ORDER_DAYS = 7
 
@@ -350,3 +351,21 @@ def productsAll(request):
         'profile' : profile,
     }
     return render_to_response('products.html', context);
+
+@login_required
+def charts(request):
+    '''
+    url: /charts [ugly hack]:should custume the admin page
+    '''
+    profiles = UserProfile.objects.all()
+
+    filename = os.path.join('static', 'data', 'data.csv')
+
+    records = open(filename, 'w')
+    records.write('Categories,Apples,Pears,Oranges,Bananas\n')
+    records.write('John,8,4,6,5\n')
+    records.write('Jane,3,4,2,3\n')
+    records.write('Joe,86,76,79,77\n')
+    records.write('Janet,3,16,13,15')
+    records.close()
+    return render_to_response('charts.html')
