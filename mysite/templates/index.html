@@ -30,7 +30,7 @@
                   </li>
                 </ul>
               </li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="/contact">Contact</a></li>
             </ul>
             
             {% if not user.username %}
@@ -81,43 +81,50 @@
     </div>
   <!-- Nav bar end-->
   <!-- body begin -->
-    <div class="container">
+    <div class="container" >
       <!-- <div class="hero-unit"> -->
-        <h1>Welcome to My Desert House!</h1>
-        <div id="myCarousel" class="carousel slide">
-            <div class="carousel-inner">
-              <div class="item active">
-                <img src="static/img/index-slide/01.jpg" alt="">
-                <div class="carousel-caption">
-                  <h4>First Thumbnail label</h4>
-                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        <h1>Welcome to My Dessert House!</h1>
+        <br />
+        <div class="row">
+          <div class="span7">  
+            <div id="myCarousel" class="carousel slide" style="width:620px;">
+              <div class="carousel-inner">
+                <div class="item active">
+                  <img src="static/img/index-slide/01.jpg" alt="">
+                </div>
+                <div class="item">
+                  <img src="static/img/index-slide/02.jpg" alt="">
+                </div>
+                <div class="item">
+                  <img src="static/img/index-slide/03.jpg" alt="">
                 </div>
               </div>
-              <div class="item">
-                <img src="static/img/index-slide/02.jpg" alt="">
-                <div class="carousel-caption">
-                  <h4>Second Thumbnail label</h4>
-                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                </div>
-              </div>
-              <div class="item">
-                <img src="static/img/index-slide/03.jpg" alt="">
-                <div class="carousel-caption">
-                  <h4>Third Thumbnail label</h4>
-                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                </div>
-              </div>
-            </div>
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
-            <script type="text/javascript">
-              $(document).ready(fucntion() {
-                $('.myCarousel').carousel({
-                  interval: 2000
+              <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+              <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+              <script type="text/javascript">
+                $(document).ready(fucntion() {
+                  $('.myCarousel').carousel({
+                    interval: 2000
+                  });
                 });
-              });
-            </script>
-      </div>
+              </script>
+            </div>
+          </div>
+          <div class="span5">
+            <div class="well"> 
+              <div class="alert alert-error">
+                <strong>Welcome!</strong> all the activity would be explained by the offical.
+              </div>
+              <p><a>Ther will be a discount on 17th, March!</a></p>
+              <p><a>All the product will be on half price on the Mother day</a></p>
+              <p><a>New product provide: Little R</a></p>
+              <p><a>There are servel new real stores in Nanjing, welcome to our new stores</a></p>
+              <p><a>New product provide: Small Tragedy</a></p>
+              <p><a>Happy Valentine's Day</a></p>
+            </div>
+          </div>
+        </div>
+      <hr />
 
       {% for product_row in products %}
         <div class="row-fluid">
@@ -251,20 +258,6 @@
           </ul>
         </div>           
       {% endfor %}
-
-
-          <div class="row-fluid">
-            <div class="span6" >
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="span6">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-          </div><!--/row-->
 
     <!-- </div><!--/herounit>   -->
 

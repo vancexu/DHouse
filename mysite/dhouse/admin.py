@@ -17,7 +17,12 @@ class SalesAdmin(admin.ModelAdmin):
     search_fields = ['name']
     date_hierarchy = 'time'
 
+class OrdersAdmin(admin.ModelAdmin):
+    list_display=('id', 'user', 'product', 'time','time_buy', 'num', 'money', 'state')
+    search_fields = ['name']
+    date_hierarchy = 'time'
+
 admin.site.register(UserProfile)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(SalesRecord, SalesAdmin)
-admin.site.register(OrdersRecord)
+admin.site.register(OrdersRecord, OrdersAdmin)

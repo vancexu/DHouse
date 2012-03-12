@@ -8,16 +8,27 @@ from datetime import datetime, timedelta
 import os
 
 MAX_ORDER_DAYS = 7
+HOTSALENUM = 10
 
 def index(request):
     '''
     url: /
     '''
     products_all = Product.objects.all()
-    p_row = len(products_all) / 3 + 1
+    productform = {}
+    for product in products_all:
+        sales = product.salesrecord_set.all()
+        num = 0
+        for sale in sales:
+            num += sale.num
+        productform[product.name] = num
+    sortform = sorted(productform, key=productform.get)
+    sortform.reverse()
+    hotsale_name = sortform[:HOTSALENUM]
+    p_row = len(hotsale_name) / 3 + 1
     products = [ [ None for c in range(3)] for r in range(p_row) ]
-    for i in range(len(products_all)):
-        products[i/3][i%3] = products_all[i]
+    for i in range(len(hotsale_name)):
+        products[i/3][i%3] = products_all.get(name=hotsale_name[i])
     
     user = request.user
 
@@ -355,7 +366,7 @@ def productsAll(request):
 @login_required
 def charts(request):
     '''
-    url: /charts [ugly hack]:should custume the admin page
+    url: /charts [ugly hack]:should customize the admin page
     '''
     user = request.user
     if user.is_staff == False:
@@ -421,7 +432,7 @@ def charts(request):
         productform[product.name] = num
     sortform = sorted(productform, key=productform.get)
     sortform.reverse()
-    hotsale_name = sortform[:3]
+    hotsale_name = sortform[:HOTSALENUM]
     filename_hotsale = os.path.join(folderpath, 'hotsale.csv')
     records_hot = open(filename_hotsale, 'w')
     for n in hotsale_name[:-1]:
@@ -429,13 +440,7 @@ def charts(request):
     records_hot.write('%s,%d' % (hotsale_name[-1], productform[hotsale_name[-1]]))
     records_hot.close()
 
-    filename = os.path.join(folderpath, 'data.csv')
+    return render_to_response('charts.html', {'user': user})
 
-    records = open(filename, 'w')
-    records.write('Categories,Apples,Pears,Oranges,Bananas\n')
-    records.write('John,8,4,6,5\n')
-    records.write('Jane,3,4,2,3\n')
-    records.write('Joe,86,76,79,77\n')
-    records.write('Janet,3,16,13,15')
-    records.close()
-    return render_to_response('charts.html')
+def contact(request):
+    return render_to_response('contact.html')

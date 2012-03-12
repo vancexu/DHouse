@@ -28,6 +28,10 @@
       .modal-backdrop, .modal-backdrop.fade.in {
         z-index: 1000;
       }
+      .well {
+        margin:0 auto; 
+        width: 800px;
+      }
     </style>
     <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
     <link rel="shortcut icon" href="images/favicon.ico">
@@ -589,34 +593,35 @@
         <div class="subnav">
           <ul class="nav nav-pills">
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Client <b class="caret"></b></a>
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Gender <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#pie_gender">Gender</a></li>
-                <li><a href="#chart3">Age</a></li>
+                <li><a href="#pie_gender">Gender Pie</a></li>
+                <li><a href="#bar_gender">Gender Bar</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Navigation <b class="caret"></b></a>
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">State <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#navs">Nav, tabs, pills</a></li>
-                <li><a href="#navbar">Navbar</a></li>
-                <li><a href="#breadcrumbs">Breadcrumbs</a></li>
-                <li><a href="#pagination">Pagination</a></li>
+                <li><a href="#pie_state">State Pie</a></li>
+                <li><a href="#bar_state">State Bar</a></li>
               </ul>
             </li>
-            <li><a href="#labels">Labels</a></li>
-            <li><a href="#typography">Typography</a></li>
-            <li><a href="#thumbnails">Thumbnails</a></li>
-            <li><a href="#alerts">Alerts</a></li>
-            <li><a href="#progress">Progress bars</a></li>
-            <li><a href="#misc">Miscellaneous</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Age <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#pie_age">Age Pie</a></li>
+                <li><a href="#bar_age">Age Bar</a></li>
+              </ul>
+            </li>
+            <li><a href="#line_sale">Sales</a></li>
+            <li><a href="#column_product">Hot Products</a></li>
           </ul>
         </div>
       </header>
       <!-- Masthead end -->
       <br />
 
-      <div class="well">
+      <div class="well" >
         <div id="pie_gender" style="width: 100%; height: 400px"></div>
       </div>
       <div class="well">

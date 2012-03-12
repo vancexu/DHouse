@@ -58,5 +58,137 @@
 			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
 			"remains": 0
 		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 6,
+		"fields": {
+			"name": "Surrounded City",
+			"price": 180,
+			"discount": 1,
+			"photo": "/static/img/cake/06.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 300
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 7,
+		"fields": {
+			"name": "Kingnight",
+			"price": 120,
+			"discount": 1,
+			"photo": "/static/img/cake/07.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 8,
+		"fields": {
+			"name": "Lovely Orange",
+			"price": 126,
+			"discount": 1,
+			"photo": "/static/img/cake/08.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 9,
+		"fields": {
+			"name": "Happy Muse",
+			"price": 138,
+			"discount": 1,
+			"photo": "/static/img/cake/09.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 10,
+		"fields": {
+			"name": "Dignity Square",
+			"price": 154,
+			"discount": 1,
+			"photo": "/static/img/cake/10.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 11,
+		"fields": {
+			"name": "Rural Scenery",
+			"price": 168,
+			"discount": 1,
+			"photo": "/static/img/cake/11.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 12,
+		"fields": {
+			"name": "Riotous Fruits",
+			"price": 88,
+			"discount": 1,
+			"photo": "/static/img/cake/12.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 13,
+		"fields": {
+			"name": "Beautiful Feather",
+			"price": 188,
+			"discount": 1,
+			"photo": "/static/img/cake/13.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 14,
+		"fields": {
+			"name": "Yellow Egg Pie",
+			"price": 100,
+			"discount": 1,
+			"photo": "/static/img/cake/14.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 15,
+		"fields": {
+			"name": "Little R",
+			"price": 144,
+			"discount": 1,
+			"photo": "/static/img/cake/15.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 200
+		}
+	},
+	{
+		"model": "dhouse.product",
+		"pk": 16,
+		"fields": {
+			"name": "Small Tragedy",
+			"price": 126,
+			"discount": 1,
+			"photo": "/static/img/cake/16.jpg",
+			"description": "This cake is made by sweet sugar,and looks nice! It is nutritional and healthy. Keep it is in cold place and finish eating it in one day",
+			"remains": 0
+		}
 	}
 ]
