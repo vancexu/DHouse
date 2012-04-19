@@ -1,0 +1,24 @@
+This is a website saling cakes.
+I use Django to implement it, also use BootStrap to make the UI.
+All pictures are from www.christime.com.cn
+
+Functions include:
+1、会员管理
+
+	* 会员办理会员卡后，一次交纳100元以上激活；
+	* 不同级别的会员享受不同优惠；
+	* 会员卡有效期一年，到期后不再缴费将停止其会员卡；
+	* 会员卡冲值；
+
+2、销售、预订管理
+
+	* 产品分类管理，包括一周内每日可售的产品、数量、价格等；
+	* 销售和预订；
+
+3、统计分析
+
+	* 统计会员卡情况（包括激活、停止情况；会员年龄、性别、居住地等情况）；
+	* 预订、售出情况；
+	* 热卖产品；
+	* 分析会员喜好、预测销售趋势
+
