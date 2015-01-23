@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<!--Nav bar begin -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">My Dessert House</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Products 
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/productsavaliable">All Avaliable Products</a>
+                  </li>
+                  <li>
+                    <a href="/productsall">All Products</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+            
+            {% if not user.username %}
+            <div id="LoginModal" class="modal hide fade">
+              <div class="modal-header">
+                <a class="close" data-dismiss="modal" >&times;</a>
+                <h3>Login</h3>
+              </div>
+              <div class="modal-body">
+                <h4>Dear customer, long time no see</h4>
+                <form action="/signin/" method="post" name="signinform">{% csrf_token %}
+                  <label for="username">User name:</label>
+                  <input type="text" name="username" value="" id="username" />
+                  <label for="password">Password:</label>
+                  <input type="password" name="password" value="" id="password" />
+                  {% if error %}
+                    <div id="signin_error">{{ error }}</div>
+                  {% endif %}
+                  <!-- <input type="submit" value="signin" /> -->
+                  {% if next %}
+                  <input type='hidden' name='next' value='{{next}}' />
+                  {% endif %}
+                  <script type="text/javascript">
+                    function loginFormSubmit() {
+                      document.forms["signinform"].submit();
+                    }
+                  </script>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <a class="btn btn-primary" onclick="loginFormSubmit()">OK</a>
+                <a href="#" class="btn" data-dismiss="modal" >Close</a>
+              </div>
+            </div>
+            <p class="navbar-text pull-right">
+              <a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a>
+            </p>
+            {% endif %}
+            {% if user.username %}
+            <p class="navbar-text pull-right">
+              <i class="icon-user icon-white"></i> 
+              Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a>
+            </p>
+            {% endif %}
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+  <!-- Nav bar end-->
+<!-- body begin -->
+  <div class="container">
+    <div class="page-header">
+      <h1>All products avaliable</h1>
+    </div>
+    {% for product in products %}
+    <div class="well" style="padding-left:35px; padding-right:35px">
+      <div class="row-fluid">
+        <div class="span2">
+          <img style="height:170px; width:170px" src="{{ product.photo }}" id="{{ product.id }}">
+        </div>
+        <div class="span7">
+          <table class="table table-bordered table-striped">
+            <tbody>
+              <tr>
+                <th>Product Name</th>
+                <td>{{ product.name }}</td>
+              </tr>
+              <tr>
+                <th>Price</th>
+                <td>{{ product.price }}</td>
+              </tr>
+              <tr>
+                <th>Description</th>
+                <td>{{ product.description }}</td>
+              </tr>
+              <tr>
+                <th>Remains</th>
+                <td>{{ product.remains }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- buyform begin -->
+        {% if user.username %}
+          <div id="buyModal{{ product.id }}" class="modal hide fade">
+            <div class="modal-header">
+              <a class="close" data-dismiss="modal" >&times;</a>
+              <h3>{{ product.name }}</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row-fluid">
+                <div class="span6">
+                  <p>Your account have <strong id="money_left{{ profile.id }}" style="color:#FF66FF">{{ profile.money }}</strong> dollars </p>
+                  <p>There are <strong id="product_remain{{ product.id }}" style="color:#FF66FF">{{ product.remains }}</strong> remain cakes </p>
+                  <hr />
+                  <form action="/buy/{{ product.id }}" method="post" name="buyform{{ product.id }}">{% csrf_token %}
+                    <label for="number">How many do you want:</label>
+                    <input type="text" name="number"  value="1" id="number{{ product.id }}" />
+                    <input type='hidden' name='price_unit' id="price_unit{{ product.id }}" value='{{ product.price }}' />
+                    <input type='hidden' name='level' id="level{{ user.id }}" value='{{ profile.level }}' />
+                    {% if next %}
+                    <input type='hidden' name='next' value='{{next}}' />
+                    {% endif %}
+                    <script type="text/javascript">
+                      $(document).ready(function() {
+                        var money_left = parseFloat($("#money_left{{ profile.id }}").html());
+                        var product_remain = parseInt($("#product_remain{{ product.id }}").html());
+                        var price = parseFloat($("#price_unit{{ product.id }}").val());
+                        var level = parseInt($("#level{{ user.id }}").val());
+                        var discount = (10 - level) / 10.0;
+                        var price_unit = price * discount;
+                        $("#okbtn{{ product.id }}").click(function() {
+                          var number = parseInt($("#number{{ product.id }}").val());
+                          var pay_all = number * price_unit;
+                          if (number > product_remain) {
+                            $("#errors{{ product.id }}").css({"color":"red", "font-style":"italic", "font-weight":"bold"});
+                            $("#errors{{ product.id }}").html("Sorry, the {{ product.name }} only have {{ product.remains }} left.");
+                          }
+                          else if (money_left < pay_all) {
+                            $("#errors{{ product.id }}").css({"color":"red", "font-style":"italic", "font-weight":"bold"});
+                            $("#errors{{ product.id }}").html("Sorry, the unit price for you is " + price_unit + ",and you should pay " + pay_all + " in all.");
+                          }else {
+                            document.forms["buyform{{ product.id }}"].submit();
+                          }
+                        });
+                      });
+                    </script>
+                    <p id="errors{{ product.id }}"></P>
+                  </form>
+                </div> <!--/span6-->
+                <div class="span6">
+                  <img src="{{ product.photo }}" />
+                </div>
+              </div><!--row-fluid-->
+            </div>
+            <div class="modal-footer">
+              <a class="btn btn-primary" id="okbtn{{ product.id }}">OK</a>
+              <a href="#" class="btn" data-dismiss="modal" >Close</a>
+            </div>
+          </div> <!-- modal end-->
+        {% endif %}
+        <!-- buyform end -->
+        <!-- buy signin begin -->
+        {% if not user.username %}
+        <div id="buyModal{{ product.id }}" class="modal hide fade">
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal" >&times;</a>
+            <h3>Login First Please</h3>
+          </div>
+          <div class="modal-body">
+            <h4>Before you but the sweet, please login first</h4>
+            <form action="/signin/" method="post" name="buySigninform{{ product.id }}" id="buySigninform{{ product.id }}">{% csrf_token %}
+              <label for="username">User name:</label>
+              <input type="text" name="username" value="" id="username{{ product.id }}" />
+              <label for="password">Password:</label>
+              <input type="password" name="password" value="" id="password{{ product.id }}" />
+              {% if error %}
+                <div id="signin_error">{{ error }}</div>
+              {% endif %}
+              <input type='hidden' name='next' value='/productsavaliable#{{ product.id }}' />
+              <script type="text/javascript">
+                $(document).ready(function() {
+                  $("#loginokbtn{{ product.id }}").click(function(){
+                    var username = document.getElementById("username{{ product.id }}").value;
+                    var password = document.getElementById('password{{ product.id }}').value;
+                    document.forms["buySigninform{{ product.id }}"].submit();
+                  });
+                });
+              </script>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" id="loginokbtn{{ product.id }}">OK</a>
+            <a href="#" class="btn" data-dismiss="modal" >Close</a>
+          </div>
+        </div>
+        {% endif %}
+        <!-- buy signin end -->
+        <div class="span3" style="height:180px">
+          <table width=100% height=100%>
+            <tr>
+              <td>
+                <!-- <a class="btn btn-primary" href="">Buy Now</a>
+                <a class="btn" href="/order/{{ product.id }}">Order</a> -->
+                <a data-toggle="modal" href="#buyModal{{ product.id }}" class="btn btn-primary">Buy now</a> 
+                <a href="/order/{{ product.id }}" class="btn">Order</a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </diV> <!--container-->
+
+{% endblock %}

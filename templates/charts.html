@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Charts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IMS Homework">
+    <meta name="author" content="vancexu">
+    <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+    <!-- Le styles -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/highcharts.js" type="text/javascript"></script>
+    <script src="/static/js/adapters/mootools-adapter.js" type="text/javascript"></script>
+    <script src="/static/js/adapters/prototype-adapter.js" type="text/javascript"></script>
+
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+      .modal-backdrop, .modal-backdrop.fade.in {
+        z-index: 1000;
+      }
+      .well {
+        margin:0 auto; 
+        width: 800px;
+      }
+    </style>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+    <script type="text/javascript">
+      var pie_gender;
+      var bar_gender;
+      var pie_state;
+      var bar_state;
+      var pie_age;
+      var bar_age;
+      var line_sale;
+      var column_product;
+
+      $(document).ready(function() {
+        // pie_gender
+        var options_gender = {
+          chart: {
+            renderTo: 'pie_gender',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'All the customers gender proportion'
+          },
+          tooltip: {
+            formatter: function() {
+              return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: 'Gender proportion',
+            data: [
+            ]
+          }]
+        }; 
+        $.get('/static/data/gender.csv', function(data) {
+            var lines = data.split('\n');
+            $.each(lines, function(lineNo, line) {
+                var items = line.split(',');
+                items[1] = parseFloat(items[1]);
+                options_gender.series[0].data.push(items);
+            });
+            pie_gender = new Highcharts.Chart(options_gender);
+        });
+        // pie_gender end
+        // bar_gender begin
+        var options_gender_bar = {
+          chart: {
+            renderTo: 'bar_gender',
+            defaultSeriesType: 'bar'
+          },
+          title: {
+            text: 'The number of males and females'
+          },
+          xAxis: {
+            categories: ['Gender'],
+            title: {
+              text: null
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Population',
+              align: 'high'
+            }
+          },
+          tooltip: {
+            formatter: function() {
+              return ''+
+                this.series.name +': '+ this.y;
+            }
+          },
+          plotOptions: {
+            bar: {
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -100,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: '#FFFFFF',
+            shadow: true
+          },
+          credits: {
+            enabled: false
+          },
+          series: []
+        };
+        $.get('/static/data/gender.csv', function(data) {
+          var lines = data.split('\n');
+          $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            var o = new Object();
+            o.name = items[0]
+            o.data = new Array();
+            o.data[0] = parseFloat(items[2]);
+            options_gender_bar.series.push(o);
+          });
+          bar_gender = new Highcharts.Chart(options_gender_bar);
+        });
+        // bar_gender end
+        // pie_state begin
+        var options_state = {
+          chart: {
+            renderTo: 'pie_state',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'The proportion of customers state'
+          },
+          tooltip: {
+            formatter: function() {
+              return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: 'State proportion',
+            data: [
+            ]
+          }]
+        }; 
+        $.get('/static/data/state.csv', function(data) {
+            var lines = data.split('\n');
+            $.each(lines, function(lineNo, line) {
+                var items = line.split(',');
+                items[1] = parseFloat(items[1]);
+                options_state.series[0].data.push(items);
+            });
+            pie_state = new Highcharts.Chart(options_state);
+        });
+        // pie_state end
+        // bar_state begin
+        var options_state_bar = {
+          chart: {
+            renderTo: 'bar_state',
+            defaultSeriesType: 'bar'
+          },
+          title: {
+            text: 'The number of active and inactive customers'
+          },
+          xAxis: {
+            categories: ['state'],
+            title: {
+              text: null
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Population',
+              align: 'high'
+            }
+          },
+          tooltip: {
+            formatter: function() {
+              return ''+
+                this.series.name +': '+ this.y;
+            }
+          },
+          plotOptions: {
+            bar: {
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -100,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: '#FFFFFF',
+            shadow: true
+          },
+          credits: {
+            enabled: false
+          },
+          series: []
+        };
+        $.get('/static/data/state.csv', function(data) {
+          var lines = data.split('\n');
+          $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            var o = new Object();
+            o.name = items[0];
+            o.data = new Array();
+            o.data[0] = parseFloat(items[2]);
+            options_state_bar.series.push(o);
+          });
+          bar_state = new Highcharts.Chart(options_state_bar);
+        });
+        // bar_state end
+        // pie_age begin
+        var options_age = {
+          chart: {
+            renderTo: 'pie_age',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'The proportion of customers age'
+          },
+          tooltip: {
+            formatter: function() {
+              return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: 'age proportion',
+            data: [
+            ]
+          }]
+        }; 
+        $.get('/static/data/age.csv', function(data) {
+            var lines = data.split('\n');
+            $.each(lines, function(lineNo, line) {
+                var items = line.split(',');
+                items[1] = parseFloat(items[1]);
+                options_age.series[0].data.push(items);
+            });
+            pie_age = new Highcharts.Chart(options_age);
+        });
+        // pie_age end
+        // bar_age begin
+        var options_age_bar = {
+          chart: {
+            renderTo: 'bar_age',
+            defaultSeriesType: 'bar'
+          },
+          title: {
+            text: 'The number of different age group'
+          },
+          xAxis: {
+            categories: ['age'],
+            title: {
+              text: null
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Population',
+              align: 'high'
+            }
+          },
+          tooltip: {
+            formatter: function() {
+              return ''+
+                this.series.name +': '+ this.y;
+            }
+          },
+          plotOptions: {
+            bar: {
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -100,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: '#FFFFFF',
+            shadow: true
+          },
+          credits: {
+            enabled: false
+          },
+          series: []
+        };
+        $.get('/static/data/age.csv', function(data) {
+          var lines = data.split('\n');
+          $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            var o = new Object();
+            o.name = items[0];
+            o.data = new Array();
+            o.data[0] = parseFloat(items[2]);
+            options_age_bar.series.push(o);
+          });
+          bar_age = new Highcharts.Chart(options_age_bar);
+        });
+        // bar_age end
+        // line_sale begin
+        var options_sale = {
+          chart: {
+            renderTo: 'line_sale',
+            defaultSeriesType: 'line'
+          },
+          title: {
+            text: 'Monthly sales'
+          },
+          xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          },
+          yAxis: {
+            title: {
+              text: 'Number products'
+            }
+          },
+          tooltip: {
+            enabled: false,
+            formatter: function() {
+              return '<b>'+ this.series.name +'</b><br/>'+
+                this.x +': '+ this.y;
+            }
+          },
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: true
+              },
+              enableMouseTracking: false
+            }
+          },
+          series: []
+        };
+        $.get('/static/data/sale.csv', function(data) {
+          var lines = data.split('\n');
+          $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            var o = new Object();
+            o.name = items[0];
+            o.data = new Array(12);
+            for (i=0; i<12; i++)
+            {
+              o.data[i] = parseFloat(items[i+1]);
+            }
+            options_sale.series.push(o);
+          });
+          line_sale = new Highcharts.Chart(options_sale);
+        });
+        // line_sale end
+        // column_product begin
+        var options_product = {
+          chart: {
+            renderTo: 'column_product',
+            defaultSeriesType: 'column',
+            margin: [ 50, 50, 100, 80]
+          },
+          title: {
+            text: 'Top 10 products'
+          },
+          xAxis: {
+            categories: [],
+            labels: {
+              rotation: -45,
+              align: 'right',
+              style: {
+                font: 'normal 13px Verdana, sans-serif'
+              }
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Number'
+            }
+          },
+          legend: {
+            enabled: false
+          },
+          tooltip: {
+            formatter: function() {
+              return '<b>'+ this.x +'</b><br/>'+
+                'Sales in 2012: '+ Highcharts.numberFormat(this.y, 1);
+            }
+          },
+          series: [{
+            name: 'Number',
+            data: [],
+            dataLabels: {
+              enabled: true,
+              rotation: -90,
+              color: '#FFFFFF',
+              align: 'right',
+              x: -3,
+              y: 10,
+              formatter: function() {
+                return this.y;
+              },
+              style: {
+                font: 'normal 13px Verdana, sans-serif'
+              }
+            }
+          }]
+        };
+        $.get('/static/data/hotsale.csv', function(data) {
+          var lines = data.split('\n');
+          $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            options_product.xAxis.categories.push(items[0]);
+            options_product.series[0].data.push(parseFloat(items[1]));
+          });
+          column_product = new Highcharts.Chart(options_product);
+        });
+        // column_product end
+
+      }); //doc
+    </script>
+
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="50">
+
+    <!--Nav bar begin -->
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">My Dessert House</a>
+            <div class="nav-collapse">
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <!-- <li><a href="/products">Products</a></li> -->
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Products 
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="/productsavaliable">All Avaliable Products</a>
+                    </li>
+                    <li>
+                      <a href="/productsall">All Products</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+              
+              {% if not user.username %}
+              <div id="LoginModal" class="modal hide fade">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal" >&times;</a>
+                  <h3>Login</h3>
+                </div>
+                <div class="modal-body">
+                  <h4>Dear customer, long time no see</h4>
+                  <form action="/signin/" method="post" name="signinform">{% csrf_token %}
+                    <label for="username">User name:</label>
+                    <input type="text" name="username" value="" id="username" />
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" value="" id="password" />
+                    {% if error %}
+                      <div id="signin_error">{{ error }}</div>
+                    {% endif %}
+                    <!-- <input type="submit" value="signin" /> -->
+                    {% if next %}
+                    <input type='hidden' name='next' value='{{next}}' />
+                    {% endif %}
+                    <script type="text/javascript">
+                      function loginFormSubmit() {
+                        document.forms["signinform"].submit();
+                      }
+                    </script>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <a class="btn btn-primary" onclick="loginFormSubmit()">OK</a>
+                  <a href="#" class="btn" data-dismiss="modal" >Close</a>
+                </div>
+              </div>
+              <p class="navbar-text pull-right">
+                <a data-toggle="modal" href="#LoginModal">Login</a> | <a href="/register/">Register</a>
+              </p>
+              {% endif %}
+              {% if user.username %}
+              <p class="navbar-text pull-right">
+                <i class="icon-user icon-white"></i> 
+                Login as <a href="/profile">{{ user.username }}</a> | <a href="/signout">logout</a>
+              </p>
+              {% endif %}
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+      </div>
+    <!-- Nav bar end-->
+
+    <div class="container">
+
+      <!-- Masthead begin -->
+      <header class="jumbotron subhead" id="overview">
+        <h1>Satatistic</h1>
+        <p class="lead">There are some basic charts about the clients info and product sales</p>
+        <div class="subnav">
+          <ul class="nav nav-pills">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Gender <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#pie_gender">Gender Pie</a></li>
+                <li><a href="#bar_gender">Gender Bar</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">State <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#pie_state">State Pie</a></li>
+                <li><a href="#bar_state">State Bar</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Age <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#pie_age">Age Pie</a></li>
+                <li><a href="#bar_age">Age Bar</a></li>
+              </ul>
+            </li>
+            <li><a href="#line_sale">Sales</a></li>
+            <li><a href="#column_product">Hot Products</a></li>
+          </ul>
+        </div>
+      </header>
+      <!-- Masthead end -->
+      <br />
+
+      <div class="well" >
+        <div id="pie_gender" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="bar_gender" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="pie_state" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="bar_state" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="pie_age" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="bar_age" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="line_sale" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="well">
+        <div id="column_product" style="width: 100%; height: 400px"></div>
+      </div>
+
+
+    </div>
+
+    <!-- footer begin -->
+    <hr />
+    <div class="row">
+      <div class="span4 offset6">
+        <footer>
+          <p>&copy; Software Institute of NJU 2012</p>
+        </footer>
+      </div>
+    </div>
+    <!-- footer end -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/application.js"></script>
+  </body>
+
+</html>
+
+  
